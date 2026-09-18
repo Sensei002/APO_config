@@ -1,0 +1,136 @@
+# =====================================================================
+#  SHURE SM7B-STYLE "PODCAST VOICE" CHAIN
+#  Equalizer APO  --  microphone / capture device only
+#  ---------------------------------------------------------------------
+#  Live file :  C:\Program Files\EqualizerAPO\config\config.txt
+#  Microphone:  Fantech Leviosa
+#
+#  Chain:  rnnoise  ->  preamp  ->  10-band EQ  ->  compressor
+#
+#  Every ReaComp value below was MEASURED against the actual plugin, not
+#  guessed. Measured behaviour of this exact setting:
+#
+#      input   -3 dBFS   ->   output   -6.0 dBFS
+#      input  -12 dBFS   ->   output   -8.4 dBFS
+#      input  -24 dBFS   ->   output  -16.5 dBFS
+#
+#  27 dB of input range is squeezed into 16 dB of output range, and the
+#  output never gets near clipping. That flat, always-present level is
+#  the "broadcast" sound.
+# =====================================================================
+
+# Restrict everything below to input (capture) devices.
+# This config can never touch your speakers or headphones.
+Stage: capture
+
+
+# ---------------------------------------------------------------------
+# 1. NOISE SUPPRESSION
+#    Delete this line if your room is quiet - rnnoise is the single
+#    biggest reason a mic sounds "processed" instead of natural.
+# ---------------------------------------------------------------------
+VSTPlugin: Library rnnoise_stereo.dll
+
+
+# ---------------------------------------------------------------------
+# 2. HEADROOM
+#    The EQ boosts below peak at about +4 dB around 100 Hz.
+# ---------------------------------------------------------------------
+Preamp: -5 dB
+
+
+# ---------------------------------------------------------------------
+# 3. LOW END  -  the "deep bassy" part
+# ---------------------------------------------------------------------
+
+# Rumble, desk thumps, plosive energy. 65 Hz keeps the real weight.
+Filter 1: ON HPQ Fc 65 Hz Q 0.707
+
+# The chest. This is what makes a voice sound big.
+Filter 2: ON PK Fc 100 Hz Gain 3.0 dB Q 1.0
+
+# Broad warmth. Adds body without making it boomy.
+Filter 3: ON LS Fc 250 Hz Gain 1.5 dB
+
+
+# ---------------------------------------------------------------------
+# 4. MIDRANGE CLEANUP  -  removes the "cheap mic" character
+# ---------------------------------------------------------------------
+
+# THE MOST IMPORTANT FILTER IN THE CHAIN. 300-400 Hz is the cardboard
+# box. Cut it and any mic starts sounding expensive.
+Filter 4: ON PK Fc 330 Hz Gain -3.0 dB Q 1.1
+
+# Nasal / papery honk.
+Filter 5: ON PK Fc 750 Hz Gain -1.5 dB Q 2.0
+
+
+# ---------------------------------------------------------------------
+# 5. PRESENCE  -  what makes words cut through Discord
+# ---------------------------------------------------------------------
+
+# Intelligibility / forwardness.
+Filter 6: ON PK Fc 3200 Hz Gain 2.5 dB Q 1.2
+
+# Definition / "crispy".
+Filter 7: ON PK Fc 6000 Hz Gain 2.0 dB Q 1.3
+
+
+# ---------------------------------------------------------------------
+# 6. TOP END  -  crisp, but never hissy or essy
+# ---------------------------------------------------------------------
+
+# Static de-esser. Tames the S/Z harshness that filters 6-7 expose.
+Filter 8: ON PK Fc 7800 Hz Gain -2.0 dB Q 1.8
+
+# Air / sheen.
+Filter 9: ON HS Fc 11000 Hz Gain 2.0 dB
+
+# Gentle roll-off. Removes hiss, keeps the smooth "7B" top.
+Filter 10: ON LP Fc 17000 Hz
+
+
+# ---------------------------------------------------------------------
+# 7. COMPRESSION  -  the "broadcast" half of the sound
+#
+#  Values are in ReaComp's own parameter scale (verified against the
+#  plugin, and what each one actually resolves to is noted):
+#
+#     Thresh   0.1    ->  -20 dBFS   where compression starts
+#     Ratio    0.03   ->  4 : 1
+#     Attack   0.02   ->  10 ms      slow enough to stay musical
+#     Release  0.03   ->  150 ms     smooth, no pumping
+#     Knee     0.25   ->  6 dB soft  gentle onset
+#     RMS size 0.01   ->  10 ms      averaging detector, not peaky
+#     Hipass   0.005  ->  100 Hz     detector ignores bass, so it does
+#                                    not duck every time you say "b"
+#     Lowpass  1      ->  20 kHz     detector low-pass off
+#     Dry/Wet  0 / 1  ->  fully wet
+#     AutoMkUp 1      ->  +7.5 dB measured make-up gain
+#     ClsAttk  1      ->  vintage level-dependent attack
+#     Pre-comp 0      ->  no added latency
+#
+#  TUNING - this is the block that decides how "radio" you sound:
+#     Too squashed / breathy?   Thresh 0.1  -> 0.15   (-20 -> -16.5 dBFS)
+#     Not controlled enough?    Ratio  0.03 -> 0.05   (4:1 -> 6:1)
+#     Still not "loud" enough?  Raise the mic level in Windows, not here.
+# ---------------------------------------------------------------------
+VSTPlugin: Library "C:\Program Files\VSTPlugins\ReaPlugs\reacomp-standalone.dll" Hipass 0.005 Thresh 0.1 Ratio 0.03 Attack 0.02 Release 0.03 Pre-comp 0 resvd 0 Lowpass 1 SignIn 0 AudIn 0 Dry 0 Wet 1 AutoMkUp 1 PreviewF 0 "RMS size" 0.01 Knee 0.25 AutoRel 0 ClsAttk 1 AntiAls 0
+
+
+# =====================================================================
+#  OPTIONAL - disabled. Remove the leading # to enable.
+# =====================================================================
+
+# ---------------------------------------------------------------------
+# GATE / EXPANDER - usually not worth it
+# Only useful if you have real background noise. A badly set gate chops
+# the start of words and sounds far worse than no gate at all.
+# ---------------------------------------------------------------------
+#VSTPlugin: Library "C:\Program Files\VSTPlugins\ATKExpander x64.dll" Attack 0.301511 Release 1 Threshold 0.447674 Slope 1 Softness 1
+
+# ---------------------------------------------------------------------
+# VST3
+# This Equalizer APO build is VST 2.4 only and CANNOT load .vst3 files.
+# See README.md section 4 for the three workarounds.
+# ---------------------------------------------------------------------

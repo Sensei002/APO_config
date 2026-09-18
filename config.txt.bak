@@ -1,0 +1,4 @@
+VSTPlugin: Library rnnoise_stereo.dll
+VSTPlugin: Library "C:\Program Files\VSTPlugins\ATKExpander x64.dll" Attack 0.301511 Release 1 Threshold 0.447674 Slope 1 Softness 1
+VSTPlugin: Library "C:\Program Files\VSTPlugins\ReaPlugs\reaeq-standalone.dll" ChunkData "IQAAAAQAAAAEAAAAAQAAAAAAAAAAwFJAAAAAAAAA8D9mZmZmZmbmPwEIAAAAAQAAAAAAAAAAAGRABCb8+I4k9D8AAAAAAADwPwEIAAAAAQAAAAAAAAAAWKtARIG6kRpW9T8zMzMzMzPzPwEBAAAAAQAAAAAAAAAAlMFA2Qph6RoE8z9mZmZmZmbmPwEBAAAAAQAAAAAAAAAAAPA/AAAAAA=="
+VSTPlugin: Library "C:\Program Files\VSTPlugins\ReaPlugs\reacomp-standalone.dll" Hipass 0.004 Thresh 0.125893 Ratio 0 Attack 0.016 Release 0.02 Pre-comp 0 resvd 0 Lowpass 1 SignIn 0 AudIn 0 Dry 3.16228e-08 Wet 1.25893 AutoMkUp 0 PreviewF 0 "RMS size" 0.005 Knee 0.125 AutoRel 0 ClsAttk 1 AntiAls 0
